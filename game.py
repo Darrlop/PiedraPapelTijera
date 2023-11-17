@@ -14,6 +14,11 @@ class UserChoice(Enum):
 # print(Option.PAPER.name)  # Salida: PAPER <- sólo el nombre
 # print(Option.PAPER.value)  # Salida: 0 <- sólo el valor asociado
 
+class Jugada(Enum):
+    EMPATE = "0"
+    VICTORIA = "v"
+    DERROTA = "x"
+
 traducciones = {"PAPER" : "Papel", "ROCK" : "Piedra", "SCISSORS" : "Tijeras"}
 
 
@@ -37,13 +42,11 @@ def adornar(user_choice, comp_choice):
     '''
     Devuelve la frase adecuada para ilustrar una magna victoria o una triste derrota
     por medio de una matriz de frases conectoras en base a la matriz de jugadas
-
                 PA  RO   SCI
                 0    1    2
         PA  0 ["0", "v", "x"] 
         PI  1 ["x", "0", "v"] 
-        SCI 2 ["v", "x", "0"]
-    
+        SCI 2 ["v", "x", "0"]  
     '''
     tabla_frases = [[" contra ", " envuelve a ", " es cortado por "], 
                     [" es envuelta por ", " contra ", " rompe a "], 
@@ -104,23 +107,24 @@ def evaluate_move(user_choice, comp_choice)->str:
     Recibe 2 jugadas y las compara a fin de determinar cual ha ganado en base a la siguiente
     matriz de reglas (0 empate, v victoria, x derrota) y siempre desde el punto de vista
     del jugador humano (filas) contra el computador (columnas):
-    
-                PA  RO   SCI
-                0    1    2
-        PA  0 ["0", "v", "x"] 
-        PI  1 ["x", "0", "v"] 
-        SCI 2 ["v", "x", "0"]
+                         COMPUTADOR
+
+                        PA  RO   SCI
+                        0    1    2
+                PA  0 ["0", "v", "x"] 
+       HUMANO   PI  1 ["x", "0", "v"] 
+                SCI 2 ["v", "x", "0"]
     '''
-    jugada = ""
-    tabla_reglas = [["0", "v", "x"], 
-                    ["x", "0", "v"], 
-                    ["v", "x", "0"]]
+    la_jugada = ""
+    tabla_reglas = [[Jugada.DERROTA, Jugada.VICTORIA, Jugada.EMPATE], 
+                    [Jugada.DERROTA, Jugada.EMPATE, Jugada.VICTORIA], 
+                    [Jugada.VICTORIA, Jugada.EMPATE, Jugada.DERROTA]]
     
-    jugada = tabla_reglas[user_choice.value][comp_choice.value]    
-    return jugada
+    la_jugada = tabla_reglas[user_choice.value][comp_choice.value]    
+    return la_jugada
 
 
-def print_result(result: str, user_choice: UserChoice, comp_choice: UserChoice)->None:
+def print_result(result: Jugada, user_choice: UserChoice, comp_choice: UserChoice)->None:
     '''
     Recibe el resultado (0,v,x), así cómo las jugadas del humano y el computador.
     Presenta visualmente el resultado. No retorna nada.
@@ -129,11 +133,11 @@ def print_result(result: str, user_choice: UserChoice, comp_choice: UserChoice)-
     print (f"Has jugado {traducciones[user_choice.name]} y el computador {traducciones[comp_choice.name]}")
     print (traducciones[user_choice.name] + adornar(user_choice, comp_choice) + traducciones[comp_choice.name] + ":")
     print()
-    if result == "0":
+    if result == Jugada.DERROTA:
         print(Fore.BLUE + "¡Habéis EMPATADO!" + Fore.RESET)
-    elif result == "v":
+    elif result == Jugada.VICTORIA:
         print(Fore.GREEN + "¡¡¡Has GANADO!!!" + Fore.RESET)
-    elif result == "x":
+    elif result == Jugada.EMPATE:
         print(Fore.RED + "Has PERDIDO miserablemente..." + Fore.RESET)
 
 
