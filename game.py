@@ -3,7 +3,6 @@ from os import system  # para borrar/limpiar el terminal
 from colorama import init, Fore, Back, Style  # para modificar estilo de fondo y letras
 
 # Uso de clase Enum en vez de constantes para definir esto
-# EL profe le llama UserChoice a la clase 
 class UserChoice(Enum):
     INVALID_CHOICE = -1
     PAPER = 0
@@ -141,13 +140,12 @@ def print_result(result: str, user_choice: UserChoice, comp_choice: UserChoice)-
 def game_loop()->None:
     ''' Inicia el juego, manteniendo el bucle principal del mismo hasta que se decide terminar'''
     
-    # Limpia de pantalla e inicio de colorama
-    #system('cls')
+    # Inicio de colorama
     init()
 
     while True:
+        # Limpio pantalla y muestro cabecera 
         system('cls')
-        # Inicializo colorama y muestro cabecera 
         dibujar_cabecera()
         # Recojo la selección del usuario jugador (piedra-papel-tijera ó salir del juego)
         user_choice = read_user_choice()
